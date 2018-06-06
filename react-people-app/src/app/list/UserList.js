@@ -9,7 +9,6 @@ export class UserList extends React.Component {
             users: []
         }
     }
-
     componentDidMount() {
         fetch
         fetchUsers()

@@ -13,7 +13,7 @@ export const CardListItem = (props) => {
                     <img src={photoLarge} />
                     <span className="card-title">{name}</span>
                 </div>
-                <div class="card-content">
+                <div className="card-content">
                     <p>{email}<br />
                         {date}
                     </p>

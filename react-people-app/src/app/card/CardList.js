@@ -25,8 +25,8 @@ export class CardList extends React.Component {
     render() {
         const userList = this.state.users;
         return (
-            <div class="row">
-                <div class="container">
+            <div className="row">
+                <div className="container">
                     {userList.map((user, index) => {
                         return <CardListItem key={index} ofMyUser={user} />
                     })}
