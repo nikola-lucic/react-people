@@ -17,31 +17,54 @@ class App extends React.Component {
 
   loadUsers() {
     fetchUsers()
-      .then((userList) => {
+      .then((usersData) => {
+        localStorage.setItem('usersData', JSON.stringify(usersData));
         this.setState({
-          users: userList
+          users: usersData
         })
       })
   }
 
   handleClick = () => {
+    localStorage.setItem('listView', !this.state.listView)
     this.setState((prevState) => ({
       listView: !prevState.listView,
     }));
   }
 
   handleComponentSwitch() {
-    return this.state.listView ? <CardList userList={this.state.users}/> : <UserList userList={this.state.users}/>
+    return this.state.listView ? <UserList userList={this.state.users} /> : <CardList userList={this.state.users} />
+  }
+
+  refreshPage() {
+    this.loadUsers()
+  }
+
+  handleData() {
+    if (this.loadUsers()) {
+      const usersData = JSON.parse(localStorage.getItem('usersData'));
+      this.setState({
+        users: usersData
+      })
+    } else {
+      this.loadUsers();
+    }
+
+    if (localStorage.getItem('listView')) {
+      this.setState({
+        listView: JSON.parse (localStorage.getItem('listView'))
+      })
+    }
   }
 
   componentDidMount() {
-    this.loadUsers()
+    this.handleData()
   }
 
   render() {
     return (
       <React.Fragment>
-        <Header title={"React people app"} state={this.state.listView} handleClick={this.handleClick} loadUsers={this.loadUsers}/>
+        <Header title={"React people app"} state={this.state.listView} handleClick={this.handleClick} refreshPage={this.refreshPage} />
         {this.handleComponentSwitch()}
         <Footer />
       </React.Fragment>
