@@ -2,7 +2,7 @@ import React from "react";
 
 export const Header = (props) => {
 
-    const { title, state, handleClick, loadUsers } = props;
+    const { title, state, handleClick, loadUsers} = props;
 
     const changeIcon = state ? 'view_list' : 'view_module'
 
@@ -16,5 +16,6 @@ export const Header = (props) => {
                 </ul>
             </div>
         </nav>
+        
     )
 }

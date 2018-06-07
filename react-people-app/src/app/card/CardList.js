@@ -3,7 +3,12 @@ import { CardListItem } from "./CardListItem";
 
 
 export const CardList = (props) => {
-    const {userList} = props
+    const { userList } = props
+
+    const filterUsers = (users, value) => {
+        return users.filter((user, index) => user.name.includes(value));
+    }
+
     return (
         <div className="row">
             <div className="container">

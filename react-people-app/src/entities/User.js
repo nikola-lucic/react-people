@@ -16,7 +16,6 @@ export class User {
     };
 
     hideEmail() {
-        const user = this.email;
         let email = this.email.split("@");
         let firstPart = email[0]
         let average = email[0].length / 2;

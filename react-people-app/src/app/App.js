@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../App.css';
 import { fetchUsers } from "../services/UserServices";
 import { Header } from "./partials/Header";
+import { SearchBar } from "../app/partials/SearchBar";
 import { Footer } from "./partials/Footer";
 import { UserList } from "./list/UserList";
 import { CardList } from './card/CardList';
@@ -11,7 +12,8 @@ class App extends React.Component {
     super(props);
     this.state = {
       users: [],
-      listView: true
+      listView: true,
+      searchBarInputValue: ""
     }
   }
 
@@ -33,18 +35,28 @@ class App extends React.Component {
   }
 
   handleComponentSwitch() {
-    return this.state.listView ? <UserList userList={this.state.users} /> : <CardList userList={this.state.users} />
+    return this.state.listView ? 
+    <UserList userList={this.state.users} searchBarInputValue={this.state.searchBarInputValue}/> 
+    : 
+    <CardList userList={this.state.users} searchBarInputValue={this.state.searchBarInputValue}/>
   }
 
   refreshPage() {
     this.loadUsers()
   }
 
+  handleSearchBar = (event) => {
+    this.setState({
+      searchBarInputValue: event.target.value
+    })
+
+  }
+
   handleData() {
     if (this.loadUsers()) {
       const usersData = JSON.parse(localStorage.getItem('usersData'));
       this.setState({
-        users: usersData
+        users: usersData,
       })
     } else {
       this.loadUsers();
@@ -52,7 +64,7 @@ class App extends React.Component {
 
     if (localStorage.getItem('listView')) {
       this.setState({
-        listView: JSON.parse (localStorage.getItem('listView'))
+        listView: JSON.parse(localStorage.getItem('listView'))
       })
     }
   }
@@ -64,7 +76,14 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <Header title={"React people app"} state={this.state.listView} handleClick={this.handleClick} refreshPage={this.refreshPage} />
+        <Header title={"React people app"}
+          state={this.state.listView}
+          handleClick={this.handleClick}
+          refreshPage={this.refreshPage}
+          search={this.handleSearchBar}
+          handleSearchBar={this.handleSearchBar} />
+
+        <SearchBar handleSearchBar={this.handleSearchBar} searchBarInputValue={this.state.searchBarInputValue} />
         {this.handleComponentSwitch()}
         <Footer />
       </React.Fragment>
