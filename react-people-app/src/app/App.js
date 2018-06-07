@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css';
 import { fetchUsers } from "../services/UserServices";
+import { Loader } from "./partials/Loader";
 import { Header } from "./partials/Header";
 import { SearchBar } from "../app/partials/SearchBar";
 import { Footer } from "./partials/Footer";
@@ -13,16 +14,22 @@ class App extends React.Component {
     this.state = {
       users: [],
       listView: true,
-      searchBarInputValue: ""
+      searchBarInputValue: "",
+      loader: true
     }
   }
 
   loadUsers() {
+    this.setState({
+      loader: true
+    })
+
     fetchUsers()
       .then((usersData) => {
         localStorage.setItem('usersData', JSON.stringify(usersData));
         this.setState({
-          users: usersData
+          users: usersData,
+          loader: false
         })
       })
   }
@@ -35,10 +42,10 @@ class App extends React.Component {
   }
 
   handleComponentSwitch() {
-    return this.state.listView ? 
-    <UserList userList={this.state.users} searchBarInputValue={this.state.searchBarInputValue}/> 
-    : 
-    <CardList userList={this.state.users} searchBarInputValue={this.state.searchBarInputValue}/>
+    return this.state.listView ?
+      <UserList userList={this.state.users} searchBarInputValue={this.state.searchBarInputValue} />
+      :
+      <CardList userList={this.state.users} searchBarInputValue={this.state.searchBarInputValue} />
   }
 
   refreshPage() {
@@ -57,9 +64,13 @@ class App extends React.Component {
       const usersData = JSON.parse(localStorage.getItem('usersData'));
       this.setState({
         users: usersData,
+        loader: false
       })
     } else {
       this.loadUsers();
+      this.setState({
+        loader: true
+      })
     }
 
     if (localStorage.getItem('listView')) {
@@ -67,6 +78,16 @@ class App extends React.Component {
         listView: JSON.parse(localStorage.getItem('listView'))
       })
     }
+  }
+
+  setLoader() {
+    this.setState({
+      loader: true
+    })
+  }
+
+  handleComponents() {
+    return this.state.loader ? <Loader /> : this.handleComponentSwitch()
   }
 
   componentDidMount() {
@@ -84,7 +105,7 @@ class App extends React.Component {
           handleSearchBar={this.handleSearchBar} />
 
         <SearchBar handleSearchBar={this.handleSearchBar} searchBarInputValue={this.state.searchBarInputValue} />
-        {this.handleComponentSwitch()}
+        {this.handleComponents()}
         <Footer />
       </React.Fragment>
     );
